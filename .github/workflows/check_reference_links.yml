@@ -19,3 +19,4 @@ jobs:
         with:
           python-version: "3.x"
       - uses: docker://pandoc/core:2.14
+      - run: python .github/markdown_check_reference_links.py
