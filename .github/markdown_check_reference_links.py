@@ -1,11 +1,11 @@
 import re
 from pathlib import Path
+from pprint import pprint
 from subprocess import check_output
-from sys import argv
 
 
 def check_path(path):
-    bad_files = []
+    bad_files = {}
 
     for file in tuple(Path(path).rglob("*.md")):
         file: Path
@@ -16,16 +16,14 @@ def check_path(path):
         html = re.sub(r"<pre.*?</pre>", "", html, flags=re.DOTALL)
 
         # pr
-        html = re.sub(
-            r'<p><a href="https://github.com/.*?/pull/\d+">\d+</a> .*?</p>', "", html
-        )
+        html = re.sub(r'<p><a href="https://github.com/.*?/pull/\d+">\d+</a> .*?</p>', "", html)
 
-        if re.search(r"\[[^\[\]]+]\[[^\[\]]*]", html):
-            bad_files.append(file.relative_to(path).as_posix())
+        if m := re.findall(r"\[[^\[\]]+]\[[^\[\]]*]", html):
+            bad_files[file.relative_to(path).as_posix()] = m
 
     return bad_files
 
 
 if __name__ == "__main__":
-    res = check_path('src/')
-    print(*res, sep="\n")
+    res = check_path("src/")
+    pprint(res)
