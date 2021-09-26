@@ -18,5 +18,5 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: "3.x"
-      - run: apt install -y pandoc
+      - run: sudo apt install -y pandoc
       - run: python .github/markdown_check_reference_links.py
